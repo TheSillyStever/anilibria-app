@@ -15,6 +15,7 @@ import ru.radiationx.data.system.AppCookieJar
 import ru.radiationx.data.system.Client
 import ru.radiationx.data.system.appendSslCompatAnalytics
 import ru.radiationx.data.system.appendTimeouts
+import ru.radiationx.data.system.FallbackDns
 import java.net.InetSocketAddress
 import java.net.Proxy
 import javax.inject.Inject
@@ -27,10 +28,12 @@ class ApiOkHttpProvider @Inject constructor(
     private val sharedBuildConfig: SharedBuildConfig,
     private val unauthorizedInterceptor: UnauthorizedInterceptor,
     private val sslCompat: SslCompat,
-    private val sslCompatAnalytics: SslCompatAnalytics
+    private val sslCompatAnalytics: SslCompatAnalytics,
+    private val fallbackDns: FallbackDns
 ) : Provider<OkHttpClient> {
 
     override fun get(): OkHttpClient = OkHttpClient.Builder()
+        .dns(fallbackDns)
         .appendSslCompatAnalytics(sslCompat, sslCompatAnalytics)
         .appendSslCompat(sslCompat)
         .appendTimeouts()

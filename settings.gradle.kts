@@ -22,7 +22,6 @@ include(
     ":shared-ktx",
     ":shared-android-ktx",
     ":searchbar",
-    ":app-tv",
     ":shared-app",
     ":quill-di",
     ":media-mobile",

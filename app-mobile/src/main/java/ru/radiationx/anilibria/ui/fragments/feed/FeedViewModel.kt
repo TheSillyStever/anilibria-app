@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import com.yandex.mobile.ads.nativeads.NativeAdRequestConfiguration
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -423,17 +423,7 @@ class FeedViewModel @Inject constructor(
                 params.appendData { it?.schedule ?: getScheduleSource() }
             }
             val adsAsync = async {
-                if (adsConfig.enabled) {
-                    withTimeout(adsConfig.timeoutMillis) {
-                        val request = NativeAdRequestConfiguration
-                            .Builder(adsConfig.unitId)
-                            .setContextTags(adsConfig.contextTags)
-                            .build()
-                        nativeAdsRepository.load(request)
-                    }
-                } else {
-                    null
-                }
+                null
             }
 
             coRunCatching {

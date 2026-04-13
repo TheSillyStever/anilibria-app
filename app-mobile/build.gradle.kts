@@ -6,7 +6,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.appmetrica)
 }
 
 fun getDateTime(): String {
@@ -40,14 +39,14 @@ android {
     val localProperties = Properties().apply {
         load(FileInputStream(rootProject.file("local.properties")))
     }
-    signingConfigs {
-        create("release") {
-            storeFile = file(localProperties.getProperty("storeFile"))
-            storePassword = localProperties.getProperty("storePassword")
-            keyAlias = localProperties.getProperty("keyAlias")
-            keyPassword = localProperties.getProperty("keyPassword")
-        }
-    }
+//    signingConfigs {
+//        create("release") {
+//            storeFile = file(localProperties.getProperty("storeFile"))
+//            storePassword = localProperties.getProperty("storePassword")
+//            keyAlias = localProperties.getProperty("keyAlias")
+//            keyPassword = localProperties.getProperty("keyPassword")
+//        }
+//    }
 
     buildTypes {
         debug {
@@ -59,7 +58,7 @@ android {
             )
         }
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -73,13 +72,13 @@ android {
     productFlavors {
         create("app") {
             dimension = "type"
-            buildConfigField("boolean", "HAS_ADS", "true")
+            buildConfigField("boolean", "HAS_ADS", "false")
             buildConfigField("boolean", "FOR_RUSTORE", "false")
         }
 
         create("rustore") {
             dimension = "type"
-            buildConfigField("boolean", "HAS_ADS", "true")
+            buildConfigField("boolean", "HAS_ADS", "false")
             buildConfigField("boolean", "FOR_RUSTORE", "true")
             versionName = "${libs.versions.mobile.version.name.get()}-rustore"
         }
@@ -133,13 +132,7 @@ kotlin {
     jvmToolchain(libs.versions.jvm.toolchain.version.get().toInt())
 }
 
-appmetrica {
-    val localProperties = Properties().apply {
-        load(FileInputStream(rootProject.file("local.properties")))
-    }
-    val propApiKey = localProperties.getProperty("appmetrica_post_api_key", "")
-    setPostApiKey(propApiKey)
-}
+
 
 dependencies {
     implementation(libs.kotlin.stdlib)
@@ -186,13 +179,5 @@ dependencies {
 
     implementation(libs.androidnetworktools)
 
-
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.core)
-
     implementation(libs.viewbindingpropertydelegate)
-
-    implementation(libs.yandex.mobileads)
 }
-
-apply(plugin = libs.plugins.gms.get().pluginId)

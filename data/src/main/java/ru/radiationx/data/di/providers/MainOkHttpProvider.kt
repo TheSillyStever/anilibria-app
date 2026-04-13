@@ -10,6 +10,7 @@ import ru.radiationx.data.sslcompat.SslCompat
 import ru.radiationx.data.sslcompat.appendSslCompat
 import ru.radiationx.data.system.appendSslCompatAnalytics
 import ru.radiationx.data.system.appendTimeouts
+import ru.radiationx.data.system.FallbackDns
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -18,10 +19,12 @@ class MainOkHttpProvider @Inject constructor(
     private val context: Context,
     private val sharedBuildConfig: SharedBuildConfig,
     private val sslCompat: SslCompat,
-    private val sslCompatAnalytics: SslCompatAnalytics
+    private val sslCompatAnalytics: SslCompatAnalytics,
+    private val fallbackDns: FallbackDns
 ) : Provider<OkHttpClient> {
 
     override fun get(): OkHttpClient = OkHttpClient.Builder()
+        .dns(fallbackDns)
         .appendSslCompatAnalytics(sslCompat, sslCompatAnalytics)
         .appendSslCompat(sslCompat)
         .appendTimeouts()

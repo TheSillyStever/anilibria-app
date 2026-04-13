@@ -3,7 +3,7 @@ package ru.radiationx.anilibria.ui.fragments.release.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import com.yandex.mobile.ads.nativeads.NativeAdRequestConfiguration
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -159,25 +159,7 @@ class ReleaseInfoViewModel @Inject constructor(
         }
         observeRelease()
 
-        viewModelScope.launch {
-            coRunCatching {
-                val config = adsConfigRepository.getConfig().releaseNative
-                if (!config.enabled) return@coRunCatching
-                val releaseTags = _state.mapNotNull { it.data?.info }.first().let {
-                    listOf(it.titleRus, it.titleEng)
-                }
-                val contextTags = config.contextTags + releaseTags
-                val request = NativeAdRequestConfiguration.Builder(config.unitId)
-                    .setContextTags(contextTags)
-                    .build()
-                val nativeAd = withTimeout(config.timeoutMillis) {
-                    nativeAdsRepository.load(request)
-                }
-                _state.update { it.copy(nativeAd = nativeAd) }
-            }.onFailure {
-                Timber.e(it, "Error while load ads for release")
-            }
-        }
+
     }
 
     private fun observeRelease() {

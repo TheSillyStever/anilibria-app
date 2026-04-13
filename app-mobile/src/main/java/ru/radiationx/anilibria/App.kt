@@ -3,9 +3,7 @@ package ru.radiationx.anilibria
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
-import com.google.firebase.messaging.FirebaseMessaging
-import io.appmetrica.analytics.AppMetrica
-import io.appmetrica.analytics.AppMetricaConfig
+
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.launchIn
@@ -25,21 +23,10 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initYandexAppMetrica()
 
         if (isMainProcess()) {
             initInMainProcess()
         }
-    }
-
-    private fun initYandexAppMetrica() {
-        //if (BuildConfig.DEBUG) return
-        val config = AppMetricaConfig
-            .newConfigBuilder("48d49aa0-6aad-407e-a738-717a6c77d603")
-            .withAnrMonitoring(true)
-            .build()
-        AppMetrica.activate(applicationContext, config)
-        AppMetrica.enableActivityAutoTracking(this)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -52,13 +39,7 @@ class App : Application() {
 
         appVersionCheck()
 
-        try {
-            FirebaseMessaging.getInstance().apply {
-                isAutoInitEnabled = true
-            }
-        } catch (ex: Throwable) {
-            Timber.e(ex)
-        }
+
 
         val preferencesHolder = get<PreferencesHolder>()
 
@@ -84,19 +65,6 @@ class App : Application() {
     }
 
     private fun changeSubscribeStatus(enabled: Boolean, topic: String) {
-        try {
-            FirebaseMessaging.getInstance().apply {
-                if (enabled) {
-                    subscribeToTopic(topic)
-                    subscribeToTopic("android_$topic")
-                } else {
-                    unsubscribeFromTopic(topic)
-                    unsubscribeFromTopic("android_$topic")
-                }
-            }
-        } catch (ex: Exception) {
-            Timber.e(ex)
-        }
     }
 
     private fun initDependencies() {

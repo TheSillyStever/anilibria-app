@@ -37,6 +37,4 @@ dependencies {
     ksp(libs.toothpick.compiler)
 
     implementation(libs.cicerone)
-
-    api(libs.yandex.appmetrica)
 }

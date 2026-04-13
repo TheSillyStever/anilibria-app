@@ -32,6 +32,7 @@ dependencies {
     api(libs.okhttp)
     api(libs.okhttp.logging.interceptor)
     api(libs.okhttp.urlconnection)
+    api(libs.okhttp.dnsoverhttps)
 
     implementation(libs.chucker)
 
